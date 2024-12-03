@@ -16,7 +16,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 @Service
-public class JwtUtils {
+public class JwtUtil {
     @Value("${security.jwt.secret-key}")
     private String secretKey;
 
@@ -40,8 +40,8 @@ public class JwtUtils {
         return buildToken(extraClaims, userDetails, jwtExpiration);
     }
 
-    public long getExpirationTime() {
-        return jwtExpiration;
+    public int getExpirationTime() {
+        return (int) jwtExpiration;
     }
 
     private String buildToken(

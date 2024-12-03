@@ -11,13 +11,13 @@ import lombok.experimental.Accessors;
 @Setter
 @Accessors(chain = true)
 @RequiredArgsConstructor
-public class Config extends BaseEntity {
+public class GlobalConfig extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(unique = true)
-    private String key;
+    private String config_key;
 
     private String value;
     private String comment;

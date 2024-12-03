@@ -2,8 +2,8 @@ package com.example.smsbe.filter;
 
 import com.example.smsbe.config.Whitelist;
 import com.example.smsbe.exception.AppException;
-import com.example.smsbe.service.ManagerService;
-import com.example.smsbe.util.JwtUtils;
+import com.example.smsbe.service.AuthService;
+import com.example.smsbe.util.JwtUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,21 +14,18 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
-import java.util.Arrays;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 @Component
 @RequiredArgsConstructor
 public class JwtAuthFilter extends OncePerRequestFilter {
-    private final JwtUtils jwtUtil;
-    private final ManagerService managerService;
+    private final JwtUtil jwtUtil;
+    private final UserDetailsService userDetailsService;
     private final HandlerExceptionResolver handlerExceptionResolver;
     private static final AntPathMatcher PATH_MATCHER = new AntPathMatcher();
 
@@ -42,7 +39,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                     String pattern = entry.getKey();
                     String allowedMethod = entry.getValue();
 
-                    // Match path and ensure method matches or is "ANY"
                     return PATH_MATCHER.match(pattern, path) &&
                             ("ANY".equalsIgnoreCase(allowedMethod) || allowedMethod.equalsIgnoreCase(method));
                 });
@@ -56,10 +52,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         final String accessToken = resolveToken(request);
         if (accessToken == null) {
-            handlerExceptionResolver.resolveException(
-                request,
+            resolveException(
                 response,
-                null,
                 new AppException(401, "UNAUTHORIZED"));
             return;
         }
@@ -70,7 +64,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                     SecurityContextHolder.getContext().getAuthentication();
 
             if (username != null && authentication == null) {
-                UserDetails user = managerService.loadUserByUsername(username);
+                UserDetails user = userDetailsService.loadUserByUsername(username);
 
                 if (jwtUtil.isTokenValid(accessToken, user)) {
                     UsernamePasswordAuthenticationToken token =
@@ -82,10 +76,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
             filterChain.doFilter(request, response);
         } catch (ExpiredJwtException e) {
-            handlerExceptionResolver.resolveException(
-                    request,
+            resolveException(
                     response,
-                    null,
                     new AppException(401, "Token expired"));
         } catch (Exception exception) {
             handlerExceptionResolver.resolveException(
@@ -104,5 +96,19 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         }
 
         return null;
+    }
+
+    //resolveException
+    private void resolveException(HttpServletResponse response, AppException e) {
+        response.setStatus(e.getStatusCode());
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
+        try {
+            String body = "{\"statusCode\":" + e.getStatusCode() + ",\"message\":\"" + e.getMessage() + "\"}";
+            response.getWriter().write(body);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
     }
 }
