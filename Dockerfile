@@ -3,6 +3,6 @@ WORKDIR /app
 COPY . .
 RUN mvn clean package -DskipTests
 
-FROM eclipse-temurin:21-jre AS final
+FROM eclipse-temurin:17-jre AS final
 COPY --from=build /app/target/*.jar /deployment/application.jar
 CMD ["java", "-jar", "/deployment/application.jar"]
