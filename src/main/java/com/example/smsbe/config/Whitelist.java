@@ -10,7 +10,7 @@ public class Whitelist {
     private static final Map<String, String> WHITELIST = new HashMap<>();
 
     static {
-        WHITELIST.put("v1/auth/**", "ANY"); // "ANY" to allow all methods
+        WHITELIST.put("/v1/auth/**", "ANY"); // "ANY" to allow all methods
         WHITELIST.put("/api/v1/public/**", "GET"); // Allow only GET method
         WHITELIST.put("/swagger-ui/**", "ANY");
         WHITELIST.put("/v3/api-docs/**", "ANY");
