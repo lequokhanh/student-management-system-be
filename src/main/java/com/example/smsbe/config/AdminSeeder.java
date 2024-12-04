@@ -1,4 +1,4 @@
-package com.example.smsbe;
+package com.example.smsbe.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationListener;
