@@ -1,12 +1,13 @@
 package com.example.smsbe;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import com.example.smsbe.entity.Manager;
-import com.example.smsbe.repositories.ManagerRepository;
+import com.example.smsbe.repository.ManagerRepository;
 
 import java.util.Optional;
 
