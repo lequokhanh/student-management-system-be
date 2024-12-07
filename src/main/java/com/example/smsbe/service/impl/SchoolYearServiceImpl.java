@@ -68,6 +68,7 @@ public class SchoolYearServiceImpl implements SchoolYearService {
         }
         classRepository.save(newClass);
         return MapperUtil.mapObject(findById(id), SchoolYearDetailDTO.class);
+    }
 
     public SchoolYearDetailDTO removeClass(Integer id, Integer classId) {
         SchoolYear schoolYear = schoolYearRepository.findById(id)
