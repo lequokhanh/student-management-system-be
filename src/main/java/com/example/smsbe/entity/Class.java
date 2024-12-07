@@ -22,10 +22,8 @@ public class Class extends BaseEntity {
 
     private String name;
     private Integer total;
-    private Integer schoolYear;
 
-    @Enumerated(EnumType.STRING)
-    private Term term;
-
-    public enum Term { _1, _2 }
+    @ManyToOne
+    @JoinColumn(name = "school_year_id", nullable = false)
+    private SchoolYear schoolYear;
 }

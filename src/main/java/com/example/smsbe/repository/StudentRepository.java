@@ -14,6 +14,7 @@ public interface StudentRepository extends JpaRepository<Student, Integer> {
     SELECT s
     FROM Student s
     WHERE s.status = 'ACTIVE'
+    AND s.deletedAt IS NULL
     AND (
         :keyword IS NULL OR
         LOWER(s.name) LIKE LOWER(CONCAT('%', :keyword, '%')) OR

@@ -11,18 +11,15 @@ import lombok.experimental.Accessors;
 @Setter
 @Accessors(chain = true)
 @RequiredArgsConstructor
-public class ClassDetail extends BaseEntity {
+public class ClassTerm extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "student_id", nullable = false)
-    private Student student;
+    @JoinColumn(name = "class_id", nullable = false)
+    private Class aClass;
 
-    @ManyToOne
-    @JoinColumn(name = "class_term_id", nullable = false)
-    private ClassTerm classTerm;
-
-    private Boolean isAvailable;
+    private Term term;
+    public enum Term { _1, _2 }
 }

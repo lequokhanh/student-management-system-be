@@ -25,6 +25,8 @@ public abstract class BaseEntity {
     @UpdateTimestamp
     private Date updatedAt;
 
+    private Date deletedAt;
+
     @PrePersist
     public void prePersist() {
         this.createdAt = new Date();
