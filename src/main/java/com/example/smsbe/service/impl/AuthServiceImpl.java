@@ -32,5 +32,4 @@ public class AuthServiceImpl implements AuthService {
                 .setExpiresIn(jwtUtil.getExpirationTime());
     }
 
-
 }

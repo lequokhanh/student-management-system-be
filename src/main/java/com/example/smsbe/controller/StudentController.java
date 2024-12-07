@@ -24,7 +24,7 @@ public class StudentController {
     }
 
     @GetMapping("/{id}")
-    public ResponseWrapper<StudentDTO> getStudentById(@RequestParam("id") int id) {
+    public ResponseWrapper<StudentDTO> getStudentById(@PathVariable("id") int id) {
         return new ResponseWrapper<StudentDTO>()
                 .setStatusCode(200)
                 .setMessage("Success")
@@ -32,7 +32,7 @@ public class StudentController {
     }
 
     @PostMapping
-    public ResponseWrapper<StudentDTO> addStudent(AddStudentRequest req) {
+    public ResponseWrapper<StudentDTO> addStudent(@RequestBody AddStudentRequest req) {
         return new ResponseWrapper<StudentDTO>()
                 .setStatusCode(201)
                 .setMessage("Student added successfully")
@@ -40,7 +40,7 @@ public class StudentController {
     }
 
     @PutMapping("/{id}")
-    public ResponseWrapper<StudentDTO> updateStudent(@RequestParam("id") int id, AddStudentRequest req) {
+    public ResponseWrapper<StudentDTO> updateStudent(@PathVariable("id") int id, AddStudentRequest req) {
         return new ResponseWrapper<StudentDTO>()
                 .setStatusCode(200)
                 .setMessage("Student updated successfully")
