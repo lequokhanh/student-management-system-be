@@ -17,4 +17,12 @@ public interface ClassDetailRepository extends JpaRepository<ClassDetail, Intege
     AND cd.deletedAt IS NULL
     """)
     List<ClassDetail> findByClassTermId(Integer classTermId);
+
+    @Query("""
+    SELECT COUNT(cd)
+    FROM ClassDetail cd
+    WHERE cd.classTerm.id = :id
+    AND cd.deletedAt IS NULL
+    """)
+    Integer countByClassTermId(Integer id);
 }

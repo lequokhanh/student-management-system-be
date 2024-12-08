@@ -86,12 +86,13 @@ public class ClassServiceImpl implements ClassService {
         Student student = studentRepository.findById(studentId).orElseThrow(() ->
                 new AppException(404, "Student not found")
         );
-
+        if (aClass.getTotal() >= classDetailRepository.countByClassTermId(classTerm.getId())) {
+            throw new AppException(400, "Class is full");
+        }
         ClassDetail classDetail = new ClassDetail()
                 .setClassTerm(classTerm)
                 .setStudent(student)
                 .setIsAvailable(true);
-
         classDetailRepository.save(classDetail);
 
         return new ClassTermDTO()
