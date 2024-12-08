@@ -1,6 +1,10 @@
 package com.example.smsbe.config;
 
 import com.example.smsbe.repository.ManagerRepository;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.servers.Server;
 import jakarta.servlet.ServletContext;
@@ -17,6 +21,15 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import java.util.List;
 
 @Configuration
+@OpenAPIDefinition(
+        info = @Info(title = "Manage API", version = "1.0", description = "Manage Documentation API v1.0")
+)
+@SecurityScheme(
+        name = "bearerAuth",
+        type = SecuritySchemeType.HTTP,
+        bearerFormat = "JWT",
+        scheme = "bearer"
+)
 public class ApplicationConfiguration {
     private final ManagerRepository managerRepository;
 
