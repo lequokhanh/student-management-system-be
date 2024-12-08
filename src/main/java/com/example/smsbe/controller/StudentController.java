@@ -40,7 +40,7 @@ public class StudentController {
     }
 
     @PutMapping("/{id}")
-    public ResponseWrapper<StudentDTO> updateStudent(@PathVariable("id") int id, AddStudentRequest req) {
+    public ResponseWrapper<StudentDTO> updateStudent(@PathVariable("id") int id, @RequestBody AddStudentRequest req) {
         return new ResponseWrapper<StudentDTO>()
                 .setStatusCode(200)
                 .setMessage("Student updated successfully")
