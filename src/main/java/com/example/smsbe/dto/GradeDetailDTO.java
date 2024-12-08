@@ -8,6 +8,6 @@ import java.util.List;
 @Getter
 @Setter
 @Accessors(chain = true)
-public class SchoolYearDetailDTO extends SchoolYearDTO {
-    List<GradeDetailDTO> grades;
+public class GradeDetailDTO extends GradeDTO {
+    List<ClassDTO> classes;
 }

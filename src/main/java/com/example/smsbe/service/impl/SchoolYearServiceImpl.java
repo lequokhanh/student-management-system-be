@@ -1,6 +1,7 @@
 package com.example.smsbe.service.impl;
 
 import com.example.smsbe.dto.ClassDTO;
+import com.example.smsbe.dto.GradeDetailDTO;
 import com.example.smsbe.dto.SchoolYearDTO;
 import com.example.smsbe.dto.SchoolYearDetailDTO;
 import com.example.smsbe.entity.Class;
@@ -20,6 +21,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -38,8 +41,22 @@ public class SchoolYearServiceImpl implements SchoolYearService {
         SchoolYear schoolYear = schoolYearRepository.findById(id)
                 .orElseThrow(() -> new AppException(404, "School year not found"));
         SchoolYearDetailDTO schoolYearDetailDTO = MapperUtil.mapObject(schoolYear, SchoolYearDetailDTO.class);
-        schoolYearDetailDTO.setClasses(
-                MapperUtil.mapList(classRepository.findBySchoolYear(schoolYear), ClassDTO.class));
+        List<Class> classList = classRepository.findBySchoolYear(schoolYear);
+        Map<Integer, List<Class>> groupedByGrade = classList.stream()
+                .collect(Collectors.groupingBy(cls -> cls.getGrade().getId()));
+        List<GradeDetailDTO> gradeDetailDTOs = groupedByGrade.entrySet().stream()
+                .map(entry -> {
+                    Integer gradeId = entry.getKey();
+                    List<Class> classesInGrade = entry.getValue();
+                    List<ClassDTO> classDTOs = MapperUtil.mapList(classesInGrade, ClassDTO.class);
+                    GradeDetailDTO gradeDetailDTO = new GradeDetailDTO();
+                    gradeDetailDTO.setId(gradeId);
+                    gradeDetailDTO.setGrade(classesInGrade.get(0).getGrade().getGrade());
+                    gradeDetailDTO.setClasses(classDTOs);
+                    return gradeDetailDTO;
+                })
+                .collect(Collectors.toList());
+        schoolYearDetailDTO.setGrades(gradeDetailDTOs);
         return schoolYearDetailDTO;
     }
 
