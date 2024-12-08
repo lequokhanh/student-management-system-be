@@ -6,12 +6,14 @@ import com.example.smsbe.request.PaginationParam;
 import com.example.smsbe.response.PageWrapper;
 import com.example.smsbe.response.ResponseWrapper;
 import com.example.smsbe.service.StudentService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/student")
+@SecurityRequirement(name = "bearerAuth")
 public class StudentController {
     private final StudentService studentService;
 
