@@ -14,7 +14,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/v1/grade")
 @RequiredArgsConstructor
-@SecurityRequirement(name = "bearerAuth")
 public class GradeController {
     private final GradeService gradeService;
     @GetMapping

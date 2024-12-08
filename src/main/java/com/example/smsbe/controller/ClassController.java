@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/v1/class")
-@SecurityRequirement(name = "bearerAuth")
 public class ClassController {
 
 }

@@ -4,6 +4,7 @@ import com.example.smsbe.repository.ManagerRepository;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.servers.Server;
@@ -22,7 +23,8 @@ import java.util.List;
 
 @Configuration
 @OpenAPIDefinition(
-        info = @Info(title = "Manage API", version = "1.0", description = "Manage Documentation API v1.0")
+        info = @Info(title = "Manage API", version = "1.0", description = "Manage Documentation API v1.0"),
+        security = @SecurityRequirement(name = "bearerAuth")
 )
 @SecurityScheme(
         name = "bearerAuth",

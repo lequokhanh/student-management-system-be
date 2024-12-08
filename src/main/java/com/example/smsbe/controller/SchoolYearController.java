@@ -16,7 +16,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/v1/school-year")
 @RequiredArgsConstructor
-@SecurityRequirement(name = "bearerAuth")
 public class SchoolYearController {
     private final SchoolYearService schoolYearService;
 
