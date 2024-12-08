@@ -14,7 +14,7 @@ spring:
 security:
   jwt:
     secret-key: ${JWT_SECRET:secret-key}
-    expiration-time: 3600000  # Example: 1 hour in milliseconds
+    expiration-time: 432000000  # Example: 1 hour in milliseconds
 
 #logging:
 #  level:
