@@ -23,4 +23,12 @@ public interface SchoolYearRepository extends JpaRepository<SchoolYear, Integer>
     AND sy.deletedAt IS NULL
     """)
     Optional<SchoolYear> findById(@Param("id") Integer id);
+
+    @Query("""
+    SELECT sy
+    FROM SchoolYear sy
+    WHERE sy.isCurrent = TRUE
+    AND sy.deletedAt IS NULL
+    """)
+    Optional<SchoolYear> findByIsCurrentTrue();
 }
