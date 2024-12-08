@@ -5,9 +5,11 @@ import com.example.smsbe.dto.GradeDetailDTO;
 import com.example.smsbe.dto.SchoolYearDTO;
 import com.example.smsbe.dto.SchoolYearDetailDTO;
 import com.example.smsbe.entity.Class;
+import com.example.smsbe.entity.ClassTerm;
 import com.example.smsbe.entity.SchoolYear;
 import com.example.smsbe.exception.AppException;
 import com.example.smsbe.repository.ClassRepository;
+import com.example.smsbe.repository.ClassTermRepository;
 import com.example.smsbe.repository.GradeRepository;
 import com.example.smsbe.repository.SchoolYearRepository;
 import com.example.smsbe.request.AddClassRequest;
@@ -30,6 +32,7 @@ public class SchoolYearServiceImpl implements SchoolYearService {
     private final SchoolYearRepository schoolYearRepository;
     private final ClassRepository classRepository;
     private final GradeRepository gradeRepository;
+    private final ClassTermRepository classTermRepository;
 
     public List<SchoolYearDTO> findAll() {
         return schoolYearRepository.findAll().stream()
@@ -109,7 +112,13 @@ public class SchoolYearServiceImpl implements SchoolYearService {
         if (existClass != null) {
             newClass.setId(existClass.getId());
         }
-        classRepository.save(newClass);
+        newClass = classRepository.save(newClass);
+        for (ClassTerm.Term term : ClassTerm.Term.values()) {
+            ClassTerm classTerm = new ClassTerm();
+            classTerm.setAClass(newClass);
+            classTerm.setTerm(term);
+            classTermRepository.save(classTerm);
+        }
         return MapperUtil.mapObject(findById(id), SchoolYearDetailDTO.class);
     }
 

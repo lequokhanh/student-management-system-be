@@ -1,6 +1,5 @@
 package com.example.smsbe.dto;
 
-import com.example.smsbe.entity.ClassTerm;
 import com.example.smsbe.entity.Student;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,6 +11,5 @@ import lombok.experimental.Accessors;
 public class ClassDetailDTO {
     private Integer id;
     private Student student;
-    private ClassTerm classTerm;
     private Boolean isAvailable;
 }

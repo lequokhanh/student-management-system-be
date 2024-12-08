@@ -7,7 +7,6 @@ import com.example.smsbe.request.AddSchoolYearRequest;
 import com.example.smsbe.request.UpdateClassRequest;
 import com.example.smsbe.response.ResponseWrapper;
 import com.example.smsbe.service.SchoolYearService;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
