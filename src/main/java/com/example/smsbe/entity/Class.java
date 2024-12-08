@@ -20,7 +20,10 @@ public class Class extends BaseEntity {
     @JoinColumn(name = "grade_id", nullable = false)
     private Grade grade;
 
+    @Column(nullable = false)
     private String name;
+
+    @Column(nullable = false)
     private Integer total;
 
     @ManyToOne

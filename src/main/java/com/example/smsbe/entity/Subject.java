@@ -17,8 +17,9 @@ public class Subject extends BaseEntity {
     @Id
     private String id;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String subject;
 
+    @Column(nullable = false)
     private Double efficient;
 }

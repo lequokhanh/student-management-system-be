@@ -7,9 +7,7 @@ import lombok.experimental.Accessors;
 @Getter
 @Setter
 @Accessors(chain = true)
-public class ClassDTO {
+public class GradeDTO {
     private Integer id;
-    private GradeDTO grade;
-    private String name;
-    private Integer total;
+    private Integer grade;
 }

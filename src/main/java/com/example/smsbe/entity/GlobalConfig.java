@@ -16,9 +16,10 @@ public class GlobalConfig extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String config_key;
 
+    @Column(nullable = false)
     private String value;
     private String comment;
 }

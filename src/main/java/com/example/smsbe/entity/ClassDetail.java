@@ -24,5 +24,6 @@ public class ClassDetail extends BaseEntity {
     @JoinColumn(name = "class_term_id", nullable = false)
     private ClassTerm classTerm;
 
-    private Boolean isAvailable;
+    @Column(nullable = false)
+    private Boolean isAvailable = true;
 }

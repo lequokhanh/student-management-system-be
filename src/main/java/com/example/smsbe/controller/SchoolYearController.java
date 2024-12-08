@@ -4,6 +4,7 @@ import com.example.smsbe.dto.SchoolYearDTO;
 import com.example.smsbe.dto.SchoolYearDetailDTO;
 import com.example.smsbe.request.AddClassRequest;
 import com.example.smsbe.request.AddSchoolYearRequest;
+import com.example.smsbe.request.UpdateClassRequest;
 import com.example.smsbe.response.ResponseWrapper;
 import com.example.smsbe.service.SchoolYearService;
 import lombok.RequiredArgsConstructor;
@@ -59,6 +60,15 @@ public class SchoolYearController {
                 .setData(schoolYearService.addClass(id, req));
     }
 
+    @PutMapping("/{id}/class/{classId}")
+    public ResponseWrapper<SchoolYearDetailDTO> updateClass(@PathVariable("id") Integer id,
+                                                            @PathVariable("classId") Integer classId,
+                                                            @RequestBody UpdateClassRequest req) {
+        return new ResponseWrapper<SchoolYearDetailDTO>()
+                .setStatusCode(200)
+                .setMessage("Update class in school year successfully")
+                .setData(schoolYearService.updateClass(id, classId, req));
+    }
     @DeleteMapping("/{id}/class/{classId}")
     public ResponseWrapper<SchoolYearDetailDTO> removeClass(@PathVariable("id") Integer id,
                                                             @PathVariable("classId") Integer classId) {

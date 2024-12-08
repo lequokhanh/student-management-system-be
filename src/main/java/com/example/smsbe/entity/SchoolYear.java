@@ -16,5 +16,7 @@ public class SchoolYear extends BaseEntity {
 
     @Column(unique = true)
     private String year;
-    private boolean isCurrent;
+
+    @Column(nullable = false)
+    private boolean isCurrent = false;
 }

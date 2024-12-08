@@ -11,6 +11,9 @@ import lombok.experimental.Accessors;
 @Setter
 @Accessors(chain = true)
 @RequiredArgsConstructor
+@Table(name = "class_term", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"class_id", "term"})
+})
 public class ClassTerm extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,6 +23,7 @@ public class ClassTerm extends BaseEntity {
     @JoinColumn(name = "class_id", nullable = false)
     private Class aClass;
 
+    @Column(nullable = false)
     private Term term;
     public enum Term { _1, _2 }
 }

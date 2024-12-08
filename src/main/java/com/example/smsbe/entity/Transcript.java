@@ -28,5 +28,6 @@ public class Transcript extends BaseEntity {
     @JoinColumn(name = "type_id", nullable = false)
     private ScoreType scoreType;
 
+    @Column(nullable = false)
     private Double score;
 }
