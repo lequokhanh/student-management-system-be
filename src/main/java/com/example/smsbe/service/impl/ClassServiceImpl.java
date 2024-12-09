@@ -39,7 +39,7 @@ public class ClassServiceImpl implements ClassService {
         Class aClass = classRepository.findById(classId).orElseThrow(() ->
                 new AppException(404, "Class not found")
         );
-        ClassTerm classTerm = classTermRepository.findByAClassIdAndTerm(classId, getTerm(1)).orElseThrow(() ->
+        ClassTerm classTerm = classTermRepository.findByAClassIdAndTerm(classId, getTerm(term)).orElseThrow(() ->
                 new AppException(404, "Term not found")
         );
         return new ClassTermDTO()
