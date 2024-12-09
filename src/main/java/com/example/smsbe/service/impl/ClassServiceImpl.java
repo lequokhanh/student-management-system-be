@@ -53,6 +53,9 @@ public class ClassServiceImpl implements ClassService {
     }
 
     public ClassTermDTO cloneListClassTerm(Integer sourceClassId, Integer sourceTerm, Integer targetClassId, Integer targetTerm) {
+        if (sourceClassId.equals(targetClassId) && sourceTerm.equals(targetTerm)) {
+            throw new AppException(400, "Source and target class are the same");
+        }
         ClassTerm sourceClassTerm = classTermRepository.findByAClassIdAndTerm(sourceClassId, getTerm(sourceTerm))
                 .orElseThrow(() -> new AppException(404, "Source term not found"));
         Class targetClass = classRepository.findById(targetClassId)
