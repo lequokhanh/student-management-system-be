@@ -1,5 +1,6 @@
 package com.example.smsbe.service.impl;
 
+import com.example.smsbe.dto.ClassDTO;
 import com.example.smsbe.dto.ClassDetailDTO;
 import com.example.smsbe.dto.ClassTermDTO;
 import com.example.smsbe.entity.Class;
@@ -43,7 +44,7 @@ public class ClassServiceImpl implements ClassService {
         );
         return new ClassTermDTO()
                 .setId(classTerm.getId())
-                .setAClass(aClass)
+                .setAClass(MapperUtil.mapObject(aClass, ClassDTO.class))
                 .setClassDetail(
                         MapperUtil.mapList(
                                 classDetailRepository.findByClassTermId(classTerm.getId()),
@@ -74,7 +75,7 @@ public class ClassServiceImpl implements ClassService {
         }
         return new ClassTermDTO()
                 .setId(targetClassTerm.getId())
-                .setAClass(targetClass)
+                .setAClass(MapperUtil.mapObject(targetClass, ClassDTO.class))
                 .setClassDetail(MapperUtil.mapList(targetClassDetails, ClassDetailDTO.class));
     }
 
@@ -100,7 +101,7 @@ public class ClassServiceImpl implements ClassService {
 
         return new ClassTermDTO()
                 .setId(classTerm.getId())
-                .setAClass(aClass)
+                .setAClass(MapperUtil.mapObject(aClass, ClassDTO.class))
                 .setClassDetail(MapperUtil.mapList(classDetailRepository.findByClassTermId(classTerm.getId()), ClassDetailDTO.class));
     }
 
@@ -111,7 +112,7 @@ public class ClassServiceImpl implements ClassService {
         classDetailRepository.save(classDetail);
         return new ClassTermDTO()
                 .setId(classDetail.getClassTerm().getId())
-                .setAClass(classDetail.getClassTerm().getAClass())
+                .setAClass(MapperUtil.mapObject(classDetail.getClassTerm().getAClass(), ClassDTO.class))
                 .setClassDetail(
                         MapperUtil.mapList(
                                 classDetailRepository.findByClassTermId(classDetail.getClassTerm().getId()),

@@ -10,6 +10,6 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class ClassDetailDTO {
     private Integer id;
-    private Student student;
+    private StudentDTO student;
     private Boolean isAvailable;
 }
