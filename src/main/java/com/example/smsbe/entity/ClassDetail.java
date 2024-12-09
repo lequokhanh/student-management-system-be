@@ -11,6 +11,9 @@ import lombok.experimental.Accessors;
 @Setter
 @Accessors(chain = true)
 @RequiredArgsConstructor
+@Table(name = "class_detail", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"student_id", "class_term_id"})
+})
 public class ClassDetail extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
