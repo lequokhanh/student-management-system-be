@@ -66,8 +66,10 @@ public class ClassServiceImpl implements ClassService {
         List<ClassDetail> sourceClassDetails = classDetailRepository.findByClassTermId(sourceClassTerm.getId());
         List<ClassDetail> targetClassDetails = new ArrayList<>();
         for (ClassDetail sourceDetail : sourceClassDetails) {
-            ClassDetail targetDetail = sourceDetail.setId(null)
-                    .setClassTerm(targetClassTerm);
+            ClassDetail targetDetail = new ClassDetail()
+                    .setClassTerm(targetClassTerm)
+                    .setStudent(sourceDetail.getStudent())
+                    .setIsAvailable(sourceDetail.getIsAvailable());
             classDetailRepository.save(targetDetail);
             targetClassDetails.add(targetDetail);
         }
