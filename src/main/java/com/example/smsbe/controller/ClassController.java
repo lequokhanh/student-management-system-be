@@ -29,7 +29,8 @@ public class ClassController {
                         request.getSourceClassId(),
                         request.getSourceTerm(),
                         request.getTargetClassId(),
-                        request.getTargetTerm()
+                        request.getTargetTerm(),
+                        request.getIsOverride()
                 ))
                 .setMessage("Class term cloned successfully")
                 .setStatusCode(201);

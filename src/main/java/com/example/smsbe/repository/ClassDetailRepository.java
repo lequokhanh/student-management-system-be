@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface ClassDetailRepository extends JpaRepository<ClassDetail, Integer> {
@@ -25,4 +24,6 @@ public interface ClassDetailRepository extends JpaRepository<ClassDetail, Intege
     AND cd.deletedAt IS NULL
     """)
     Integer countByClassTermId(Integer id);
+
+    void deleteByClassTermId(Integer classTermId);
 }

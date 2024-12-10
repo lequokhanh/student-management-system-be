@@ -53,7 +53,7 @@ public class ClassServiceImpl implements ClassService {
                 );
     }
 
-    public ClassTermDTO cloneListClassTerm(Integer sourceClassId, Integer sourceTerm, Integer targetClassId, Integer targetTerm) {
+    public ClassTermDTO cloneListClassTerm(Integer sourceClassId, Integer sourceTerm, Integer targetClassId, Integer targetTerm, Boolean isOverride) {
         if (sourceClassId.equals(targetClassId) && sourceTerm.equals(targetTerm)) {
             throw new AppException(400, "Source and target class are the same");
         }
@@ -63,20 +63,21 @@ public class ClassServiceImpl implements ClassService {
                 .orElseThrow(() -> new AppException(404, "Target class not found"));
         ClassTerm targetClassTerm = classTermRepository.findByAClassIdAndTerm(targetClassId, getTerm(targetTerm))
                 .orElseGet(() -> classTermRepository.save(new ClassTerm().setAClass(targetClass).setTerm(getTerm(targetTerm))));
+        if (isOverride) {
+            classDetailRepository.deleteByClassTermId(targetClassTerm.getId());
+        }
         List<ClassDetail> sourceClassDetails = classDetailRepository.findByClassTermId(sourceClassTerm.getId());
-        List<ClassDetail> targetClassDetails = new ArrayList<>();
         for (ClassDetail sourceDetail : sourceClassDetails) {
             ClassDetail targetDetail = new ClassDetail()
                     .setClassTerm(targetClassTerm)
                     .setStudent(sourceDetail.getStudent())
                     .setIsAvailable(sourceDetail.getIsAvailable());
-            classDetailRepository.save(targetDetail);
-            targetClassDetails.add(targetDetail);
+            try {
+                classDetailRepository.save(targetDetail);
+            } catch (Exception ignored) {
+            }
         }
-        return new ClassTermDTO()
-                .setId(targetClassTerm.getId())
-                .setAClass(MapperUtil.mapObject(targetClass, ClassDTO.class))
-                .setClassDetail(MapperUtil.mapList(targetClassDetails, ClassDetailDTO.class));
+        return getClassDetail(targetClassId, targetTerm);
     }
 
 
@@ -99,10 +100,7 @@ public class ClassServiceImpl implements ClassService {
                 .setIsAvailable(true);
         classDetailRepository.save(classDetail);
 
-        return new ClassTermDTO()
-                .setId(classTerm.getId())
-                .setAClass(MapperUtil.mapObject(aClass, ClassDTO.class))
-                .setClassDetail(MapperUtil.mapList(classDetailRepository.findByClassTermId(classTerm.getId()), ClassDetailDTO.class));
+        return getClassDetail(classId, term);
     }
 
     public ClassTermDTO updateStudentStatus(Integer classDetailId, Boolean isAvailable) {
@@ -110,14 +108,6 @@ public class ClassServiceImpl implements ClassService {
                 .orElseThrow(() -> new AppException(404, "Class detail not found"));
         classDetail.setIsAvailable(isAvailable);
         classDetailRepository.save(classDetail);
-        return new ClassTermDTO()
-                .setId(classDetail.getClassTerm().getId())
-                .setAClass(MapperUtil.mapObject(classDetail.getClassTerm().getAClass(), ClassDTO.class))
-                .setClassDetail(
-                        MapperUtil.mapList(
-                                classDetailRepository.findByClassTermId(classDetail.getClassTerm().getId()),
-                                ClassDetailDTO.class
-                        )
-                );
+        return getClassDetail(classDetail.getClassTerm().getAClass().getId(), classDetail.getClassTerm().getTerm().ordinal() + 1);
     }
 }

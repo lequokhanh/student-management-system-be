@@ -12,4 +12,5 @@ public class CloneListClassTermRequest {
     private Integer sourceTerm;
     private Integer targetClassId;
     private Integer targetTerm;
+    private Boolean isOverride = false;
 }
