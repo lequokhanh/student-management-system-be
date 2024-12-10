@@ -61,17 +61,15 @@ public class ClassServiceImpl implements ClassService {
                 .orElseThrow(() -> new AppException(404, "Source term not found"));
         Class targetClass = classRepository.findById(targetClassId)
                 .orElseThrow(() -> new AppException(404, "Target class not found"));
-        ClassTerm targetClassTerm = new ClassTerm();
-        targetClassTerm.setAClass(targetClass);
-        targetClassTerm.setTerm(getTerm(targetTerm));
-        targetClassTerm = classTermRepository.save(targetClassTerm);
+        ClassTerm targetClassTerm = classTermRepository.findByAClassIdAndTerm(targetClassId, getTerm(targetTerm))
+                .orElseGet(() -> classTermRepository.save(new ClassTerm().setAClass(targetClass).setTerm(getTerm(targetTerm))));
         List<ClassDetail> sourceClassDetails = classDetailRepository.findByClassTermId(sourceClassTerm.getId());
         List<ClassDetail> targetClassDetails = new ArrayList<>();
         for (ClassDetail sourceDetail : sourceClassDetails) {
-            sourceDetail.setId(null);
-            sourceDetail.setClassTerm(targetClassTerm);
-            classDetailRepository.save(sourceDetail);
-            targetClassDetails.add(sourceDetail);
+            ClassDetail targetDetail = sourceDetail.setId(null)
+                    .setClassTerm(targetClassTerm);
+            classDetailRepository.save(targetDetail);
+            targetClassDetails.add(targetDetail);
         }
         return new ClassTermDTO()
                 .setId(targetClassTerm.getId())
