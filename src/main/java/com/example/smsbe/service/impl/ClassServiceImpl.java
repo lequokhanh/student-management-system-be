@@ -35,6 +35,7 @@ public class ClassServiceImpl implements ClassService {
             default -> throw new AppException(400, "Invalid term");
         };
     }
+
     public ClassTermDTO getClassDetail(Integer classId, Integer term) {
         Class aClass = classRepository.findById(classId).orElseThrow(() ->
                 new AppException(404, "Class not found")

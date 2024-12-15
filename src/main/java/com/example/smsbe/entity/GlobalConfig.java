@@ -17,7 +17,7 @@ public class GlobalConfig extends BaseEntity {
     private Integer id;
 
     @Column(unique = true, nullable = false)
-    private String config_key;
+    private String configKey;
 
     @Column(nullable = false)
     private String value;
