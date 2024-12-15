@@ -11,9 +11,8 @@ import java.util.Map;
 @Setter
 @Accessors(chain = true)
 public class TranscriptDTO {
-    private Integer id;
     private SubjectDTO subject;
     private ClassDetailDTO classDetail;
-    Map<ScoreTypeDTO, List<Double>> scores;
+    Map<Integer, List<ScoreDTO>> scores;
     private Double avgScore;
 }

@@ -1,9 +1,6 @@
 package com.example.smsbe.service.impl;
 
-import com.example.smsbe.dto.ClassTermDTO;
-import com.example.smsbe.dto.ScoreTypeDTO;
-import com.example.smsbe.dto.StudentDTO;
-import com.example.smsbe.dto.TranscriptDTO;
+import com.example.smsbe.dto.*;
 import com.example.smsbe.entity.*;
 import com.example.smsbe.entity.Class;
 import com.example.smsbe.exception.AppException;
@@ -30,6 +27,7 @@ public class TranscriptServiceImpl implements TranscriptService {
     private final SubjectRepository subjectRepository;
     private final ClassDetailRepository classDetailRepository;
     private final ScoreTypeRepository scoreTypeRepository;
+    private final StudentRepository studentRepository;
     private static final String MIN_SCORE_PASS = "minScorePass";
 
     private ClassTerm.Term getTerm(Integer term) {
@@ -49,6 +47,7 @@ public class TranscriptServiceImpl implements TranscriptService {
     }
 
     public void addScore(AddScoreRequest req) {
+        System.out.println(req.getClassDetailId());
         ClassDetail classDetail = classDetailRepository.findById(req.getClassDetailId()).orElseThrow(() ->
                 new AppException(404, "Class detail not found")
         );
@@ -70,29 +69,37 @@ public class TranscriptServiceImpl implements TranscriptService {
         transcriptRepository.save(transcript);
     }
 
-    public List<TranscriptDTO> getTranscriptByClassTermAndSubject(Integer classId, Integer term, String subjectId) {
-        List<Transcript> transcripts = transcriptRepository.findByClassTermAndSubject(classId, getTerm(term), subjectId);
+public List<TranscriptDTO> getTranscriptByClassTermAndSubject(Integer classId, Integer term, String subjectId) {
+    List<ClassDetail> students = classDetailRepository.findByClassTerm(classId, getTerm(term));
+    List<Transcript> transcripts = transcriptRepository.findByClassTermAndSubject(classId, getTerm(term), subjectId);
 
-        Map<Integer, List<Transcript>> groupedByStudent = transcripts.stream()
-                .collect(Collectors.groupingBy(transcript -> transcript.getClassDetail().getId()));
+    Map<Integer, List<Transcript>> groupedByStudent = transcripts.stream()
+            .collect(Collectors.groupingBy(transcript -> transcript.getClassDetail().getId()));
 
-        List<TranscriptDTO> transcriptDTOs = new ArrayList<>();
+    List<TranscriptDTO> transcriptDTOs = new ArrayList<>();
 
-        groupedByStudent.forEach((studentId, studentTranscripts) -> {
-            Map<ScoreTypeDTO, List<Double>> scores = studentTranscripts.stream()
-                    .collect(Collectors.groupingBy(transcript -> MapperUtil.mapObject(transcript.getScoreType(), ScoreTypeDTO.class),
-                            Collectors.mapping(Transcript::getScore, Collectors.toList())));
-            // avgScore calculated by sum product of score and weight divided by sum of weight
-            Double averageScore = scores.entrySet().stream()
-                    .mapToDouble(entry -> entry.getKey().getWeight() * entry.getValue().stream().mapToDouble(Double::doubleValue).sum())
-                    .sum() / scores.entrySet().stream().mapToDouble(entry -> entry.getKey().getWeight()).sum();
-            transcriptDTOs.add(MapperUtil.mapObject(studentTranscripts.get(0), TranscriptDTO.class)
-                    .setScores(scores)
-                    .setAvgScore(averageScore));
-        });
-
-        return transcriptDTOs;
+    for (ClassDetail student : students) {
+        List<Transcript> studentTranscripts = groupedByStudent.getOrDefault(student.getId(), Collections.emptyList());
+        Map<ScoreTypeDTO, List<ScoreDTO>> scores = studentTranscripts.stream()
+                .collect(Collectors.groupingBy(transcript -> MapperUtil.mapObject(transcript.getScoreType(), ScoreTypeDTO.class),
+                        Collectors.mapping(transcript -> new ScoreDTO()
+                                .setScore(transcript.getScore())
+                                .setId(transcript.getId()), Collectors.toList())));
+        Double averageScore = scores.entrySet().stream()
+                .mapToDouble(entry -> entry.getKey().getWeight() * entry.getValue().stream().mapToDouble(ScoreDTO::getScore).sum())
+                .sum() / (scores.keySet().isEmpty() ? 1 : scores.keySet().stream().mapToDouble(ScoreTypeDTO::getWeight).sum());
+        Map<Integer, List<ScoreDTO>> scoresMap = new HashMap<>();
+        for (Map.Entry<ScoreTypeDTO, List<ScoreDTO>> entry : scores.entrySet()) {
+            scoresMap.put(entry.getKey().getId(), entry.getValue());
+        }
+        transcriptDTOs.add(new TranscriptDTO()
+                        .setClassDetail(MapperUtil.mapObject(student, ClassDetailDTO.class))
+                        .setScores(scoresMap)
+                        .setAvgScore(averageScore));
     }
+
+    return transcriptDTOs;
+}
 
 
     public List<TranscriptSummaryResponse> getTranscriptSummaryByClassTermAndSubject(Integer schoolYearID, Integer term, String subjectId) {

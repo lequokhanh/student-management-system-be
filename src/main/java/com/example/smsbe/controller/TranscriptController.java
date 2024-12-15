@@ -44,12 +44,12 @@ public class TranscriptController {
                 .setData(transcriptService.getTranscriptSummaryByClassTermAndSubject(schoolYearId, term, subjectId));
     }
 
-    @GetMapping("/class/{classId}/term/{term}")
-    public ResponseWrapper<List<TranscriptSummaryResponse>> getTranscriptSummary(@PathVariable("classId") Integer classId,
+    @GetMapping("/schoolYear/{schoolYearId}/term/{term}")
+    public ResponseWrapper<List<TranscriptSummaryResponse>> getTranscriptSummary(@PathVariable("schoolYearId") Integer schoolYearId,
                                                                                  @PathVariable("term") Integer term) {
         return new ResponseWrapper<List<TranscriptSummaryResponse>>()
                 .setStatusCode(200)
                 .setMessage("Success")
-                .setData(transcriptService.getTranscriptSummaryByClassTerm(classId, term));
+                .setData(transcriptService.getTranscriptSummaryByClassTerm(schoolYearId, term));
     }
 }

@@ -8,6 +8,7 @@ import lombok.experimental.Accessors;
 import java.util.Date;
 
 @Getter
+@Setter
 public class AddStudentRequest {
     private String name;
     private Student.Gender gender;
