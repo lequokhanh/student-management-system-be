@@ -90,7 +90,9 @@ public List<TranscriptDTO> getTranscriptByClassTermAndSubject(Integer classId, I
                 .sum() / (scores.keySet().isEmpty() ? 1 : scores.keySet().stream().mapToDouble(ScoreTypeDTO::getWeight).sum());
         Map<Integer, List<ScoreDTO>> scoresMap = new HashMap<>();
         for (Map.Entry<ScoreTypeDTO, List<ScoreDTO>> entry : scores.entrySet()) {
-            scoresMap.put(entry.getKey().getId(), entry.getValue());
+            List<ScoreDTO> scoreList = scoresMap.getOrDefault(entry.getKey().getId(), new ArrayList<>());
+            scoreList.addAll(entry.getValue());
+            scoresMap.put(entry.getKey().getId(), scoreList);
         }
         transcriptDTOs.add(new TranscriptDTO()
                         .setClassDetail(MapperUtil.mapObject(student, ClassDetailDTO.class))
