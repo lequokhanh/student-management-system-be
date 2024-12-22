@@ -12,6 +12,7 @@ import java.util.List;
 
 public interface TranscriptService {
     void addScore(AddScoreRequest req);
+    void deleteScore(Integer transcriptId);
     List<TranscriptDTO> getTranscriptByClassTermAndSubject(Integer classId, Integer term, String subjectId);
     List<TranscriptSummaryResponse> getTranscriptSummaryByClassTermAndSubject(Integer schoolYearID, Integer term, String subjectId);
     List<TranscriptSummaryResponse> getTranscriptSummaryByClassTerm(Integer schoolYearID, Integer term);

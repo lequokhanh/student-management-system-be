@@ -1,15 +1,14 @@
 package com.example.smsbe.service.impl;
 
+import com.example.smsbe.dto.GradeDTO;
 import com.example.smsbe.dto.ScoreTypeDTO;
 import com.example.smsbe.dto.SubjectDTO;
 import com.example.smsbe.entity.GlobalConfig;
+import com.example.smsbe.entity.Grade;
 import com.example.smsbe.entity.ScoreType;
 import com.example.smsbe.entity.Subject;
 import com.example.smsbe.exception.AppException;
-import com.example.smsbe.repository.ConfigRepository;
-import com.example.smsbe.repository.ScoreTypeRepository;
-import com.example.smsbe.repository.SubjectRepository;
-import com.example.smsbe.repository.TranscriptRepository;
+import com.example.smsbe.repository.*;
 import com.example.smsbe.request.AddScoreTypeRequest;
 import com.example.smsbe.request.UpdateScoreTypeRequest;
 import com.example.smsbe.request.UpdateSubjectRequest;
@@ -29,6 +28,7 @@ public class ConfigServiceImpl implements ConfigService {
     private final ScoreTypeRepository scoreTypeRepository;
     private final SubjectRepository subjectRepository;
     private final ConfigRepository configRepository;
+    private final GradeRepository gradeRepository;
 
     public List<ScoreTypeDTO> getScoreTypes() {
         return scoreTypeRepository.findAllActive().stream()
@@ -86,5 +86,85 @@ public class ConfigServiceImpl implements ConfigService {
         subject.setDeletedAt(new Date());
         subjectRepository.save(subject);
         return getSubjects();
+    }
+
+    public Integer getMinAge() {
+        Optional<GlobalConfig> config = configRepository.findByConfigKey("minAge");
+        return config.map(GlobalConfig::getValue).map(Integer::parseInt).orElse(0);
+    }
+
+    public Integer updateMinAge(Integer req) {
+        GlobalConfig config = configRepository.findByConfigKey("minAge")
+                .orElse(new GlobalConfig().setConfigKey("minAge"));
+        config.setValue(req.toString());
+        configRepository.save(config);
+        return req;
+    }
+
+    public Integer getMaxAge() {
+        Optional<GlobalConfig> config = configRepository.findByConfigKey("maxAge");
+        return config.map(GlobalConfig::getValue).map(Integer::parseInt).orElse(0);
+    }
+
+    public Integer updateMaxAge(Integer req) {
+        GlobalConfig config = configRepository.findByConfigKey("maxAge")
+                .orElse(new GlobalConfig().setConfigKey("maxAge"));
+        config.setValue(req.toString());
+        configRepository.save(config);
+        return req;
+    }
+
+    public Integer getMinScorePass() {
+        Optional<GlobalConfig> config = configRepository.findByConfigKey("minScorePass");
+        return config.map(GlobalConfig::getValue).map(Integer::parseInt).orElse(0);
+    }
+
+    public Integer updateMinScorePass(Integer req) {
+        GlobalConfig config = configRepository.findByConfigKey("minScorePass")
+                .orElse(new GlobalConfig().setConfigKey("minScorePass"));
+        config.setValue(req.toString());
+        configRepository.save(config);
+        return req;
+    }
+
+    public Integer getMaxTotal() {
+        Optional<GlobalConfig> config = configRepository.findByConfigKey("maxTotal");
+        return config.map(GlobalConfig::getValue).map(Integer::parseInt).orElse(0);
+    }
+
+    public Integer updateMaxTotal(Integer req) {
+        GlobalConfig config = configRepository.findByConfigKey("maxTotal")
+                .orElse(new GlobalConfig().setConfigKey("maxTotal"));
+        config.setValue(req.toString());
+        configRepository.save(config);
+        return req;
+    }
+
+    public List<GradeDTO> getGrades() {
+        return gradeRepository.findAllByDeletedAtIsNull().stream()
+                .map(grade -> MapperUtil.mapObject(grade, GradeDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    public List<GradeDTO> addGrade(Integer req) {
+        Grade grade = new Grade().setGrade(req);
+        gradeRepository.save(grade);
+        return getGrades();
+    }
+
+    public List<GradeDTO> updateGrade(Integer id, Integer req) {
+        Grade existing = gradeRepository.findByIdAndDeletedAtIsNull(id)
+                .orElseThrow(() -> new AppException(404, "Grade not found"));
+        existing.setGrade(req);
+        gradeRepository.save(existing);
+        return getGrades();
+    }
+
+    public List<GradeDTO> deleteGrade(Integer id) {
+        Grade grade = gradeRepository.findByIdAndDeletedAtIsNull(id)
+                .orElseThrow(() -> new AppException(404, "Grade not found"));
+        grade.setDeletedAt(new Date());
+        gradeRepository.save(grade);
+        return getGrades();
     }
 }

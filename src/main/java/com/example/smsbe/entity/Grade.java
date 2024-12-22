@@ -16,6 +16,6 @@ public class Grade extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private Integer grade;
 }

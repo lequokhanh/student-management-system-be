@@ -69,7 +69,15 @@ public class TranscriptServiceImpl implements TranscriptService {
         transcriptRepository.save(transcript);
     }
 
-public List<TranscriptDTO> getTranscriptByClassTermAndSubject(Integer classId, Integer term, String subjectId) {
+    public void deleteScore(Integer transcriptId) {
+        Transcript transcript = transcriptRepository.findById(transcriptId).orElseThrow(() ->
+                new AppException(404, "Transcript not found")
+        );
+
+        transcriptRepository.delete(transcript);
+    }
+
+    public List<TranscriptDTO> getTranscriptByClassTermAndSubject(Integer classId, Integer term, String subjectId) {
     List<ClassDetail> students = classDetailRepository.findByClassTerm(classId, getTerm(term));
     List<Transcript> transcripts = transcriptRepository.findByClassTermAndSubject(classId, getTerm(term), subjectId);
 

@@ -18,6 +18,8 @@ public interface GradeRepository extends JpaRepository<Grade, Integer> {
     """)
     Optional<Grade> findByGrade(Integer grade);
 
+    Optional<Grade> findByIdAndDeletedAtIsNull(Integer id);
+
     @Query("""
     SELECT g
     FROM Grade g

@@ -24,6 +24,14 @@ public class TranscriptController {
                 .setMessage("Success");
     }
 
+    @DeleteMapping("/{transcriptId}")
+    public ResponseWrapper<Void> deleteScore(@PathVariable("transcriptId") Integer transcriptId) {
+        transcriptService.deleteScore(transcriptId);
+        return new ResponseWrapper<Void>()
+                .setStatusCode(200)
+                .setMessage("Success");
+    }
+
     @GetMapping("/class/{classId}/term/{term}/subject/{subjectId}")
     public ResponseWrapper<List<TranscriptDTO>> getTranscript(@PathVariable("classId") Integer classId,
                                                               @PathVariable("term") Integer term,

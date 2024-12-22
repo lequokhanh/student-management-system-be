@@ -1,5 +1,6 @@
 package com.example.smsbe.controller;
 
+import com.example.smsbe.dto.GradeDTO;
 import com.example.smsbe.dto.ScoreTypeDTO;
 import com.example.smsbe.dto.SubjectDTO;
 import com.example.smsbe.request.AddScoreTypeRequest;
@@ -17,6 +18,102 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ConfigController {
     private final ConfigService configService;
+
+    @GetMapping("/minage")
+    public ResponseWrapper<Integer> getMinAge() {
+        return new ResponseWrapper<Integer>()
+                .setStatusCode(200)
+                .setMessage("Success")
+                .setData(configService.getMinAge());
+    }
+
+    @PutMapping("/minage")
+    public ResponseWrapper<Integer> updateMinAge(@RequestBody Integer req) {
+        return new ResponseWrapper<Integer>()
+                .setStatusCode(200)
+                .setMessage("Success")
+                .setData(configService.updateMinAge(req));
+    }
+
+    @GetMapping("/maxage")
+    public ResponseWrapper<Integer> getMaxAge() {
+        return new ResponseWrapper<Integer>()
+                .setStatusCode(200)
+                .setMessage("Success")
+                .setData(configService.getMaxAge());
+    }
+
+    @PutMapping("/maxage")
+    public ResponseWrapper<Integer> updateMaxAge(@RequestBody Integer req) {
+        return new ResponseWrapper<Integer>()
+                .setStatusCode(200)
+                .setMessage("Success")
+                .setData(configService.updateMaxAge(req));
+    }
+
+    @GetMapping("/minscorepass")
+    public ResponseWrapper<Integer> getMinScorePass() {
+        return new ResponseWrapper<Integer>()
+                .setStatusCode(200)
+                .setMessage("Success")
+                .setData(configService.getMinScorePass());
+    }
+
+    @PutMapping("/minscorepass")
+    public ResponseWrapper<Integer> updateMinScorePass(@RequestBody Integer req) {
+        return new ResponseWrapper<Integer>()
+                .setStatusCode(200)
+                .setMessage("Success")
+                .setData(configService.updateMinScorePass(req));
+    }
+
+    @GetMapping("/maxtotal")
+    public ResponseWrapper<Integer> getMaxTotal() {
+        return new ResponseWrapper<Integer>()
+                .setStatusCode(200)
+                .setMessage("Success")
+                .setData(configService.getMaxTotal());
+    }
+
+    @PutMapping("/maxtotal")
+    public ResponseWrapper<Integer> updateMaxTotal(@RequestBody Integer req) {
+        return new ResponseWrapper<Integer>()
+                .setStatusCode(200)
+                .setMessage("Success")
+                .setData(configService.updateMaxTotal(req));
+    }
+
+    @GetMapping("/grade")
+    public ResponseWrapper<List<GradeDTO>> getGrades() {
+        return new ResponseWrapper<List<GradeDTO>>()
+                .setStatusCode(200)
+                .setMessage("Success")
+                .setData(configService.getGrades());
+    }
+
+    @PostMapping("/grade")
+    public ResponseWrapper<List<GradeDTO>> addGrade(@RequestBody Integer req) {
+        return new ResponseWrapper<List<GradeDTO>>()
+                .setStatusCode(200)
+                .setMessage("Success")
+                .setData(configService.addGrade(req));
+    }
+
+    @PutMapping("/grade/{id}")
+    public ResponseWrapper<List<GradeDTO>> updateGrade(@PathVariable("id") Integer id, @RequestBody Integer req) {
+        return new ResponseWrapper<List<GradeDTO>>()
+                .setStatusCode(200)
+                .setMessage("Success")
+                .setData(configService.updateGrade(id, req));
+    }
+
+    @DeleteMapping("/grade/{id}")
+    public ResponseWrapper<List<GradeDTO>> deleteGrade(@PathVariable("id") Integer id) {
+        return new ResponseWrapper<List<GradeDTO>>()
+                .setStatusCode(200)
+                .setMessage("Success")
+                .setData(configService.deleteGrade(id));
+    }
 
     @GetMapping("/subject")
     public ResponseWrapper<List<SubjectDTO>> getSubjects() {
