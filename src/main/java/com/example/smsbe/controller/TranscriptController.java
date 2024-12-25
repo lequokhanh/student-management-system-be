@@ -2,6 +2,7 @@ package com.example.smsbe.controller;
 
 import com.example.smsbe.dto.TranscriptDTO;
 import com.example.smsbe.request.AddScoreRequest;
+import com.example.smsbe.request.UpdateScoreRequest;
 import com.example.smsbe.response.ResponseWrapper;
 import com.example.smsbe.response.TranscriptSummaryResponse;
 import com.example.smsbe.service.TranscriptService;
@@ -21,6 +22,15 @@ public class TranscriptController {
         transcriptService.addScore(req);
         return new ResponseWrapper<Void>()
                 .setStatusCode(201)
+                .setMessage("Success");
+    }
+
+    @PutMapping("/{transcriptId}")
+    public ResponseWrapper<Void> updateScore(@PathVariable("transcriptId") Integer transcriptId,
+                                             @RequestBody UpdateScoreRequest req) {
+        transcriptService.updateScore(transcriptId, req);
+        return new ResponseWrapper<Void>()
+                .setStatusCode(200)
                 .setMessage("Success");
     }
 

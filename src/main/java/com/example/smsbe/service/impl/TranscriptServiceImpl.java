@@ -6,6 +6,7 @@ import com.example.smsbe.entity.Class;
 import com.example.smsbe.exception.AppException;
 import com.example.smsbe.repository.*;
 import com.example.smsbe.request.AddScoreRequest;
+import com.example.smsbe.request.UpdateScoreRequest;
 import com.example.smsbe.response.TranscriptSummaryResponse;
 import com.example.smsbe.service.TranscriptService;
 import com.example.smsbe.util.MapperUtil;
@@ -75,6 +76,15 @@ public class TranscriptServiceImpl implements TranscriptService {
         );
 
         transcriptRepository.delete(transcript);
+    }
+
+    public void updateScore(Integer transcriptId, UpdateScoreRequest req) {
+        Transcript transcript = transcriptRepository.findById(transcriptId).orElseThrow(() ->
+                new AppException(404, "Transcript not found")
+        );
+        transcript.setScore(req.getScore());
+        transcriptRepository.save(transcript);
+
     }
 
     public List<TranscriptDTO> getTranscriptByClassTermAndSubject(Integer classId, Integer term, String subjectId) {
