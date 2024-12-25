@@ -8,10 +8,7 @@ import com.example.smsbe.entity.Class;
 import com.example.smsbe.entity.ClassTerm;
 import com.example.smsbe.entity.SchoolYear;
 import com.example.smsbe.exception.AppException;
-import com.example.smsbe.repository.ClassRepository;
-import com.example.smsbe.repository.ClassTermRepository;
-import com.example.smsbe.repository.GradeRepository;
-import com.example.smsbe.repository.SchoolYearRepository;
+import com.example.smsbe.repository.*;
 import com.example.smsbe.request.AddClassRequest;
 import com.example.smsbe.request.AddSchoolYearRequest;
 import com.example.smsbe.request.UpdateClassRequest;
@@ -33,6 +30,7 @@ public class SchoolYearServiceImpl implements SchoolYearService {
     private final ClassRepository classRepository;
     private final GradeRepository gradeRepository;
     private final ClassTermRepository classTermRepository;
+    private final ConfigRepository configRepository;
 
     public List<SchoolYearDTO> findAll() {
         return schoolYearRepository.findAll().stream()
@@ -99,6 +97,11 @@ public class SchoolYearServiceImpl implements SchoolYearService {
         Class newClass = MapperUtil.mapObject(req, Class.class);
         if (req.getGrade() == null) {
             throw new AppException(409, "Grade is required");
+        }
+        int maxTotal = Integer.parseInt(configRepository.findByConfigKey("maxTotal").orElseThrow(
+                () -> new AppException(500, "Max total not found")).getValue());
+        if (newClass.getTotal() > maxTotal) {
+            throw new AppException(409, "Total students must be less than " + maxTotal);
         }
         newClass.setGrade(gradeRepository.findByGrade(req.getGrade())
                 .orElseThrow(() -> new AppException(404, "Grade not found")));
