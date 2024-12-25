@@ -1,5 +1,6 @@
 package com.example.smsbe.controller;
 
+import com.example.smsbe.dto.ScoreDTO;
 import com.example.smsbe.dto.TranscriptDTO;
 import com.example.smsbe.request.AddScoreRequest;
 import com.example.smsbe.request.UpdateScoreRequest;
@@ -18,11 +19,11 @@ public class TranscriptController {
     private final TranscriptService transcriptService;
 
     @PostMapping
-    public ResponseWrapper<Void> addScore(@RequestBody AddScoreRequest req) {
-        transcriptService.addScore(req);
-        return new ResponseWrapper<Void>()
+    public ResponseWrapper<ScoreDTO> addScore(@RequestBody AddScoreRequest req) {
+        return new ResponseWrapper<ScoreDTO>()
                 .setStatusCode(201)
-                .setMessage("Success");
+                .setMessage("Success")
+                .setData(transcriptService.addScore(req));
     }
 
     @PutMapping("/{transcriptId}")

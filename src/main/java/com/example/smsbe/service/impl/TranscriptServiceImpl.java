@@ -47,7 +47,7 @@ public class TranscriptServiceImpl implements TranscriptService {
         return Integer.parseInt(config.get().getValue());
     }
 
-    public void addScore(AddScoreRequest req) {
+    public ScoreDTO addScore(AddScoreRequest req) {
         System.out.println(req.getClassDetailId());
         ClassDetail classDetail = classDetailRepository.findById(req.getClassDetailId()).orElseThrow(() ->
                 new AppException(404, "Class detail not found")
@@ -67,7 +67,10 @@ public class TranscriptServiceImpl implements TranscriptService {
                 .setScoreType(scoreType)
                 .setScore(req.getScore());
 
-        transcriptRepository.save(transcript);
+        transcript = transcriptRepository.save(transcript);
+        return new ScoreDTO()
+                .setId(transcript.getId())
+                .setScore(transcript.getScore());
     }
 
     public void deleteScore(Integer transcriptId) {
