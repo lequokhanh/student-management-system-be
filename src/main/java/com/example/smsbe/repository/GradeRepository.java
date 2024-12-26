@@ -16,7 +16,7 @@ public interface GradeRepository extends JpaRepository<Grade, Integer> {
     WHERE g.grade = :grade
     AND g.deletedAt IS NULL
     """)
-    Optional<Grade> findByGrade(Integer grade);
+    Optional<Grade> findByGradeAndDeletedAtIsNull(Integer grade);
 
     Optional<Grade> findByIdAndDeletedAtIsNull(Integer id);
 
@@ -26,4 +26,11 @@ public interface GradeRepository extends JpaRepository<Grade, Integer> {
     WHERE g.deletedAt IS NULL
     """)
     List<Grade> findAllByDeletedAtIsNull();
+
+    @Query("""
+    SELECT g
+    FROM Grade g
+    WHERE g.grade = :grade
+    """)
+    Optional<Grade> findByGrade(Integer grade);
 }

@@ -103,7 +103,7 @@ public class SchoolYearServiceImpl implements SchoolYearService {
         if (newClass.getTotal() > maxTotal) {
             throw new AppException(409, "Total students must be less than " + maxTotal);
         }
-        newClass.setGrade(gradeRepository.findByGrade(req.getGrade())
+        newClass.setGrade(gradeRepository.findByGradeAndDeletedAtIsNull(req.getGrade())
                 .orElseThrow(() -> new AppException(404, "Grade not found")));
         newClass.setSchoolYear(schoolYearRepository.findById(id)
                 .orElseThrow(() -> new AppException(404, "School year not found")));

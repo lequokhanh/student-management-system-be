@@ -147,6 +147,15 @@ public class ConfigServiceImpl implements ConfigService {
     }
 
     public List<GradeDTO> addGrade(Integer req) {
+        Grade existedGrade = gradeRepository.findByGrade(req).orElse(null);
+        if (existedGrade != null) {
+            if (existedGrade.getDeletedAt() != null) {
+                existedGrade.setDeletedAt(null);
+                gradeRepository.save(existedGrade);
+                return getGrades();
+            }
+            throw new AppException(409, "Grade already exists");
+        }
         Grade grade = new Grade().setGrade(req);
         gradeRepository.save(grade);
         return getGrades();
