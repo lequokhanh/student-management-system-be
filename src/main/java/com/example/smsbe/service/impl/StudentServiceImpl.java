@@ -15,6 +15,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.Optional;
 
@@ -40,15 +43,21 @@ public class StudentServiceImpl implements StudentService {
 
     public StudentDTO addStudent(AddStudentRequest req) {
         Student student = MapperUtil.mapObject(req, Student.class);
-        Date dob = student.getDob();
+
+        LocalDate dob = student.getDob().toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
+
         int minAge = Integer.parseInt(configRepository.findByConfigKey("minAge").orElseThrow(
                 () -> new AppException(500, "Min age not found")).getValue());
         int maxAge = Integer.parseInt(configRepository.findByConfigKey("maxAge").orElseThrow(
                 () -> new AppException(500, "Max age not found")).getValue());
-        int age = new Date().getYear() - dob.getYear();
+
+        int age = Period.between(dob, LocalDate.now()).getYears();
         if (age < minAge || age > maxAge) {
             throw new AppException(400, "Student age must be between " + minAge + " and " + maxAge);
         }
+
         return MapperUtil.mapObject(studentRepository.save(student), StudentDTO.class);
     }
 
