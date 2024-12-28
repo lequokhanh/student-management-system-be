@@ -47,4 +47,12 @@ public interface ClassDetailRepository extends JpaRepository<ClassDetail, Intege
     AND cd.deletedAt IS NULL
     """)
     Optional<ClassDetail> findById(@Param("id") Integer id);
+
+    @Query("""
+    SELECT cd
+    FROM ClassDetail cd
+    WHERE cd.classTerm.id = :id
+    AND cd.student.id = :studentId
+    """)
+    Optional<ClassDetail> findByClassTermIdAndStudentId(Integer id, Integer studentId);
 }

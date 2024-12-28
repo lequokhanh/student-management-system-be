@@ -46,11 +46,11 @@ public class ClassController {
                 .setStatusCode(201);
     }
 
-    @PutMapping("/classDetails/{classDetailId}/status")
+    @DeleteMapping("/classDetails/{classDetailId}")
     public ResponseWrapper<ClassTermDTO> updateStudentStatus(
-            @PathVariable Integer classDetailId, @RequestParam Boolean isAvailable) {
+            @PathVariable Integer classDetailId) {
         return new ResponseWrapper<ClassTermDTO>()
-                .setData(classService.updateStudentStatus(classDetailId, isAvailable))
+                .setData(classService.deleteStudent(classDetailId))
                 .setMessage("Student status updated successfully")
                 .setStatusCode(200);
     }

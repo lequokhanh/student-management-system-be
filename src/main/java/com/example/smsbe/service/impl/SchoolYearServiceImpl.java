@@ -18,6 +18,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -33,9 +34,10 @@ public class SchoolYearServiceImpl implements SchoolYearService {
     private final ConfigRepository configRepository;
 
     public List<SchoolYearDTO> findAll() {
-        return schoolYearRepository.findAll().stream()
-                .map(item -> MapperUtil.mapObject(item, SchoolYearDTO.class))
-                .toList();
+//        return schoolYearRepository.findAll().stream()
+//                .map(item -> MapperUtil.mapObject(item, SchoolYearDTO.class))
+//                .toList();
+        return new ArrayList<>();
     }
 
     public SchoolYearDetailDTO findById(Integer id) {

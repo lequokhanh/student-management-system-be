@@ -17,7 +17,7 @@ import com.example.smsbe.util.MapperUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -95,6 +95,14 @@ public class ClassServiceImpl implements ClassService {
         if (aClass.getTotal() <= classDetailRepository.countByClassTermId(classTerm.getId())) {
             throw new AppException(400, "Class is full");
         }
+        ClassDetail cd = classDetailRepository.findByClassTermIdAndStudentId(classTerm.getId(), studentId).orElse(null);
+        if (cd != null && cd.getDeletedAt() == null) {
+            throw new AppException(400, "Student already in class");
+        } else if (cd != null) {
+            cd.setDeletedAt(null);
+            classDetailRepository.save(cd);
+            return getClassDetail(classId, term);
+        }
         ClassDetail classDetail = new ClassDetail()
                 .setClassTerm(classTerm)
                 .setStudent(student)
@@ -104,10 +112,10 @@ public class ClassServiceImpl implements ClassService {
         return getClassDetail(classId, term);
     }
 
-    public ClassTermDTO updateStudentStatus(Integer classDetailId, Boolean isAvailable) {
+    public ClassTermDTO deleteStudent(Integer classDetailId) {
         ClassDetail classDetail = classDetailRepository.findById(classDetailId)
                 .orElseThrow(() -> new AppException(404, "Class detail not found"));
-        classDetail.setIsAvailable(isAvailable);
+        classDetail.setDeletedAt(new Date());
         classDetailRepository.save(classDetail);
         return getClassDetail(classDetail.getClassTerm().getAClass().getId(), classDetail.getClassTerm().getTerm().ordinal() + 1);
     }
