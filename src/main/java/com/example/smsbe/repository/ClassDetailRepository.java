@@ -55,4 +55,16 @@ public interface ClassDetailRepository extends JpaRepository<ClassDetail, Intege
     AND cd.student.id = :studentId
     """)
     Optional<ClassDetail> findByClassTermIdAndStudentId(Integer id, Integer studentId);
+
+    @Query("SELECT CASE WHEN COUNT(cd) > 0 THEN true ELSE false END " +
+            "FROM ClassDetail cd " +
+            "JOIN cd.classTerm ct " +
+            "JOIN ct.aClass c " +
+            "WHERE cd.student.id = :studentId " +
+            "AND ct.term = :term " +
+            "AND c.schoolYear.id = :schoolYearId")
+    boolean existsByStudentIdAndTermAndSchoolYear(@Param("studentId") Integer studentId,
+                                                  @Param("term") ClassTerm.Term term,
+                                                  @Param("schoolYearId") Integer schoolYearId);
+
 }

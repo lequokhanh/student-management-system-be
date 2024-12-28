@@ -92,6 +92,15 @@ public class ClassServiceImpl implements ClassService {
         Student student = studentRepository.findById(studentId).orElseThrow(() ->
                 new AppException(404, "Student not found")
         );
+        // Check if the student is already enrolled in a class for the same term and school year
+        boolean exists = classDetailRepository.existsByStudentIdAndTermAndSchoolYear(
+                studentId,
+                getTerm(term),
+                aClass.getSchoolYear().getId()
+        );
+        if (exists) {
+            throw new AppException(400, "Student is already enrolled in this term and school year.");
+        }
         if (aClass.getTotal() <= classDetailRepository.countByClassTermId(classTerm.getId())) {
             throw new AppException(400, "Class is full");
         }
