@@ -42,7 +42,7 @@ public class ClassController {
                                                            @PathVariable Integer studentId) {
         return new ResponseWrapper<ClassTermDTO>()
                 .setData(classService.addStudentToClass(classId, term, studentId))
-                .setMessage("Student added to class successfully")
+                .setMessage("Student" + studentId + " added to class successfully")
                 .setStatusCode(201);
     }
 
