@@ -19,6 +19,7 @@ public interface TranscriptRepository extends JpaRepository<Transcript, Integer>
              AND t.classDetail.classTerm.aClass.id = :classId
              AND t.classDetail.classTerm.term = :term
              AND t.subject.id = :subjectId
+           ORDER BY t.id
            """)
     List<Transcript> findByClassTermAndSubject(@Param("classId") Integer classId,
                                                @Param("term") ClassTerm.Term term,
