@@ -179,32 +179,25 @@ public class TranscriptServiceImpl implements TranscriptService {
             ClassTerm classTerm = classTermRepository.findByAClassIdAndTerm(aClass.getId(), getTerm(term)).orElseThrow(() ->
                     new AppException(404, "Class term not found")
             );
-            // calculate gpa for each studen in the class, if the student has no transcript, the gpa is 0, if the student has transcript, the gpa is calculated by sum product of avg score of each subject and efficient of subject divided by sum of efficient of subject
-            List<TranscriptDTO> transcripts = getTranscriptByClassTermAndSubject(aClass.getId(), term, null);
-            List<Double> gpas = transcripts.stream()
-                    .map(transcript -> {
-                        double gpa = subjects.stream()
-                                .mapToDouble(subject -> {
-                                    List<Transcript> subjectTranscripts = transcriptRepository.findByClassTermAndSubject(aClass.getId(), getTerm(term), subject.getId());
-                                    if (subjectTranscripts.isEmpty()) {
-                                        return 0;
-                                    }
-                                    double avgScore = subjectTranscripts.stream()
-                                            .mapToDouble(Transcript::getScore)
-                                            .average()
-                                            .orElse(0);
-                                    return avgScore * subject.getEfficient();
-                                })
-                                .sum();
-                        double totalEfficient = subjects.stream()
-                                .mapToDouble(Subject::getEfficient)
-                                .sum();
-                        return totalEfficient > 0 ? gpa / totalEfficient : 0;
-                    })
-                    .toList();
+            Map<Integer, Double> gpas = new HashMap<>();
+            subjects.forEach(subject -> {
+                List<TranscriptDTO> transcripts = getTranscriptByClassTermAndSubject(aClass.getId(), term, subject.getId());
+                transcripts.forEach(transcript -> {
+                    double avgScore = transcript.getAvgScore() * subject.getEfficient();
+                    if (gpas.containsKey(transcript.getClassDetail().getId())) {
+                        avgScore += gpas.get(transcript.getClassDetail().getId());
+                    }
+                    gpas.put(transcript.getClassDetail().getId(), avgScore);
+                });
+            });
+            Double totalEfficient = subjects.stream().mapToDouble(Subject::getEfficient).sum();
+            gpas.forEach((key, value) -> {
+                double gpa = value / totalEfficient;
+                gpas.put(key, gpa);
+            });
             int totalStudents = aClass.getTotal();
-            int passedStudents = (int) gpas.stream()
-                    .filter(gpa -> gpa >= minScorePass)
+            int passedStudents = (int) gpas.entrySet().stream()
+                    .filter(gpa -> gpa.getValue() >= minScorePass)
                     .count();
             double passRate = totalStudents > 0 ? (double) passedStudents / totalStudents * 100 : 0;
             summaryResponses.add(new TranscriptSummaryResponse()
