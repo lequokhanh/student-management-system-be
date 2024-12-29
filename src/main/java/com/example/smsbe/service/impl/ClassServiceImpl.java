@@ -92,6 +92,12 @@ public class ClassServiceImpl implements ClassService {
         Student student = studentRepository.findById(studentId).orElseThrow(() ->
                 new AppException(404, "Student not found")
         );
+        if (student.getDeletedAt() != null) {
+            throw new AppException(404, "Student not found");
+        }
+        if (student.getStatus() == Student.Status.INACTIVE) {
+            throw new AppException(400, "Student is inactive");
+        }
         // Check if the student is already enrolled in a class for the same term and school year
         ClassDetail existingClassDetail = classDetailRepository.findExistingEnrollment(
                 studentId,
